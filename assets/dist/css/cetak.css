@@ -1,0 +1,24 @@
+html{font-family: Arial, Helvetica, sans-serif !important;}
+body{font-size: 12px !important;font-family: Arial, Helvetica, sans-serif !important;margin-top:70px;font-weight:normal;}
+@page {
+  margin-left: 1cm !important;
+  margin-top: 1cm !important;
+  margin-right: 1cm !important;
+  margin-bottom: 0.7cm !important;
+ }
+.pgbr {page-break-before: always;}
+.tblcnt{text-align:center;vertical-align:middle !important;}
+.tdct{width:32px !important;}
+.rt90{transform:rotate(-90deg);white-space: nowrap;transform-origin: 43px 43px;}
+.table{width:100%;border-collapse: collapse !important;}
+.table tr td{padding:3px !important;}
+.table tr th{padding:4px !important;}
+.irit tr td{padding:2px !important;font-size:11px !important;}
+.irit tr th{padding:3px !important;}
+.table .table-bordered, .table-bordered tr td, .table-bordered tr th{border: 1px solid #444;}
+.header{position:fixed;}
+.nobdrtop{border-top-style: none !important;}
+.nobdrbtm{border-bottom-style: none !important;}
+.nobdrside{border-style: solid none !important;}
+.nobdrsidel{border-left-style: none !important;}
+.nobdrsider{border-right-style: none !important;}
