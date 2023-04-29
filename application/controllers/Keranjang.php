@@ -42,6 +42,7 @@
 			'catatan'          => $this->input->post('catatan'),
 			'tgl_pembayaran'	 => null,
 			'status'					 => 'Silahkan lakukan pembayaran selama 1x24 jam, jika tidak transaksi akan terhapus',
+			'sisa_pembayaran'  => $this->input->post('total_transaksi'),
 			'no_resi'					 => null,
 			'bank'						 => null,
 			'tgl_pernikahan'	 => $this->input->post('tgl_transaksi')

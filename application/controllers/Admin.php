@@ -42,8 +42,11 @@
 			$this->template->load('admin/template2','admin/rinci',$data);
 		}
 		
-		function transaksi($id=null,$stt=null){
+		function transaksi($id=null,$stt=null,$ttl_trn=null){
 			if ($stt!=null){$this->M_proses->ubah("tbl_transaksi",array("status"=>$stt),array("id_transaksi"=>$id));}
+			if ($stt=='Lunas'){
+				$this->M_proses->ubah("tbl_transaksi",array("status"=>$stt,"jumlah_dp"=>$ttl_trn,"sisa_pembayaran"=>""),array("id_transaksi"=>$id));
+			}
 			
 			//cek transaksi lewat 1 hari
 			$dt1=$this->db->query("SELECT * FROM tbl_transaksi WHERE status != 'Lunas'")->result();
@@ -68,6 +71,30 @@
 			$data["dtrans"]	= $this->M_data->data("tbl_transaksi",array("id_transaksi"=>$id))->result();
 			
 			$this->template->load('admin/template2','admin/data_transaksi',$data);
+		}
+
+		function update_transaksi($id=null,$total_transaksi=null){
+			$dtold=$this->M_data->data("tbl_transaksi",array("id_transaksi"=>$id))->result();
+			// $dtold["jumlah_dp"] = $this->input->post("jumlah_dp");
+			if($this->input->post("jumlah_dp") > $total_transaksi) {
+				$alert_info=array("alert_jns"=>'warning',"alert_jdl"=>"<i class='fa fa-close'></i> Gagal.!!","alert_pesan"=>"<p>Data uang masuk lebih besar dari total pembayaran</p>");
+				$this->session->set_flashdata($alert_info);
+				redirect(base_url('admin/transaksi/'));
+			} else {
+
+				$this->M_proses->ubah("tbl_transaksi",array("jumlah_dp"=>$this->input->post("jumlah_dp"),"sisa_pembayaran"=>($total_transaksi - $this->input->post("jumlah_dp"))),array("id_transaksi"=>$id));
+
+				$data["jdlapp"]	= "Wedding Organizer";
+				$data["jdlhal"] = "Transaksi WO";
+				$data["deshal"] = "";
+				$data["mnuact"] = 'transaksi';
+
+				$data["dtrans"]	= $this->M_data->data("tbl_transaksi")->result();
+				$alert_info=array("alert_jns"=>'success',"alert_jdl"=>"<i class='fa fa-check-square-o'></i> Success.!!","alert_pesan"=>"<p>Data uang masuk berhasil di update</p>");
+				$this->session->set_flashdata($alert_info);
+				redirect(base_url('admin/transaksi/'));
+				// $this->template->load('admin/template2','admin/data_transaksi',$data);
+			}
 		}
 		
 		function laporan(){

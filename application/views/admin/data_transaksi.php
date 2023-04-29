@@ -35,7 +35,7 @@
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
-						<center><h4 id="refbukti"></h4></center>
+						<center><h4 id="refbukti">Bukti Transaksi</h4></center>
 						
 					</div>
 					<div class="modal-body modal-body-sub_agile" id="fbody">

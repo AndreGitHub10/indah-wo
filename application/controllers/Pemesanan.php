@@ -66,6 +66,30 @@
 			$this->session->set_flashdata($alert_info);
 			redirect(base_url("pemesanan"));
 		}
+
+		function up_bukti_dp($id){
+			$dir		 = "foto/bukti/";
+			$newname = "foto".date("Y-M-D-His");
+			//inisialisasi & proses upload
+			$config['upload_path'] = $dir;
+			$config['allowed_types'] = 'jpg|png|jpeg';
+			$config['max_size']     = '10000';
+			$config['max_width'] = '4208';
+			$config['max_height'] = '4208';
+			$config['file_name'] = $newname;
+			//upload
+			$this->load->library('upload', $config);
+			if ($_FILES["bukti"]["name"]!='' or $_FILES["bukti"]["name"]!=null){
+				if ($this->upload->do_upload('bukti')){
+					$fname=$this->upload->file_name;
+					$dt=array("tgl_dp"=>date("Y-m-d H:i:s"),"bukti_dp"=>$fname,"status"=>"Menunggu Konfirmasi Admin","bank_dp"=>$this->input->post('bank'));
+					$this->M_proses->ubah("tbl_transaksi",$dt,array("id_transaksi"=>$id));
+					$alert_info=array("alert_jns"=>'success',"alert_jdl"=>"<i class='fa fa-check-square-o'></i> Success.!!","alert_pesan"=>"<p>Bukti Pembayaran Berhasil di Upload..</p>");
+				}else{$alert_info=array("alert_jns"=>'warning',"alert_jdl"=>'Gagal..!!',"alert_pesan"=>'<p>'.$this->upload->display_errors().'</p>');}
+			}
+			$this->session->set_flashdata($alert_info);
+			redirect(base_url("pemesanan"));
+		}
 		
 		function cetak($id){
 			$data["dtrans"]=$this->M_data->data("tbl_transaksi",array("id_transaksi"=>$id))->row();

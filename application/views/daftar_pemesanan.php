@@ -77,15 +77,17 @@
                                 </a>
 
                                 <button type="button" class="btn btn-warning" onclick="invoi('<?php echo $r->id_transaksi?>')"><i class="fa fa-eye"></i> Lihat Invoice</button>
-																<?php if ($r->bukti_transaksi!=''){?>
-                                <button type="button" class="btn btn-success" onclick="bukti('<?php echo base_url("foto/bukti/".$r->bukti_transaksi)?>','<?php echo $r->bank.' ('.$r->tgl_pembayaran.')'?>')"><i class="fa fa-check"></i> Bukti Transaksi</button>
-																<?php }else{?>
-                                <button type="button" class="btn btn-default" onclick="konfirm('<?php echo $r->id_transaksi?>')"><i class="fa fa-clock-o"></i> Konfirmasi</button>
+																<?php if ($r->bukti_transaksi!='' && $r->bukti_dp!=''){?>
+                                                                    <button type="button" class="btn btn-success" onclick="bukti('<?php echo base_url("foto/bukti/".$r->bukti_dp)?>','<?php echo base_url("foto/bukti/".$r->bukti_transaksi)?>','<?php echo $r->bank_dp ?>','<?php echo $r->bank ?>','<?php echo $r->tgl_dp ?>','<?php echo $r->tgl_pembayaran ?>')"><i class="fa fa-photo"></i> Bukti Transaksi <span class="badge">2</span></button>
+                                                                    <?php } else if ($r->bukti_dp!='' && $r->bukti_transaksi=='') {?>
+                                                                        <button type="button" class="btn btn-warning" onclick="bukti('<?php echo base_url("foto/bukti/".$r->bukti_dp)?>',null,'<?php echo $r->bank_dp ?>',null,'<?php echo $r->tgl_dp ?>')"><i class="fa fa-eye"></i> Bukti Transaksi <span class="badge">1</span></button>
+																<?php } if ($r->bukti_dp==null) {?>
+                                <button type="button" class="btn btn-default" onclick="konfirm('<?php echo $r->id_transaksi?>')"><i class="fa fa-credit-card"></i> Konfirmasi &#40;DP&#41;</button>
                                 <?php } if ($status=='Lunas'){?>
                                 <a href="<?php echo base_url("pemesanan/cetak/".$r->id_transaksi)?>" target="blank">
                                 <button type="button" class="btn btn-info"><i class="fa fa-print"></i> Cetak</button>
                                 <?php } if ($status=='Dp'){?>
-                                <button type="button" class="btn btn-default" onclick="pelunasan('<?php echo $r->id_transaksi?>')"><i class="fa fa-clock-o"></i> Konfirmasi Pelunasan</button>
+                                <button type="button" class="btn btn-default" onclick="pelunasan('<?php echo $r->id_transaksi?>')"><i class="fa fa-clock-o"></i> Konfirmasi &#40;Pelunasan&#41;</button>
                                 <a href="<?php echo base_url("pemesanan/cetak/".$r->id_transaksi)?>" target="blank">
                                 <button type="button" class="btn btn-info"><i class="fa fa-print"></i> Cetak</button>
                             </a>
@@ -141,14 +143,36 @@
 			}
 		}
 		
-		function bukti(gmb,ref){
-			$("#fbody").html("<center><img src='"+gmb+"' height='450px'></center>");
-			$("#refbukti").html(ref);
+		function bukti(gmb,gmb2F,ref,ref2F,tgl,tgl2F){
+			var gmb2=null;
+			var ref2=null;
+			var tgl2=null;
+			var refs1="";
+			var refs2="";
+			if(gmb2F!=null){
+				gmb2="<div class='panel panel-success'><div class='panel-heading'><span class='panel-title'>Gambar</span></div><div class='panel-body'><center><img src='"+gmb2F+"' height='450px'></center></div></div>";
+			} else {
+				gmb2="<div class='panel panel-danger' style='margin-top:20px;'><div class='panel-heading'><span class='panel-title'>Keterangan</span></div><div class='panel-body'><span>Bukti transfer belum diunggah</span></div></div>";
+			}
+			if(ref2F!=null){
+				ref2="<div class='panel-heading'><span class='panel-title'>Keterangan : </span></div><div class='panel-body'><span>"+ref2F+"</span></div>";
+				tgl2="<div class='panel-heading'><span class='panel-title'>Tanggal : </span></div><div class='panel-body'><span>"+tgl2F+"</span></div>";
+				refs2="<div class='row' style='margin-top:20px;'><div class='col-md-6'><div class='panel panel-success'>"+ref2+"</div></div><div class='col-md-6'><div class='panel panel-success'>"+tgl2+"</div></div></div>"
+			}else{
+				refs2="";
+			}
+			ref="<div class='panel-heading'><span class='panel-title'>Keterangan : </span></div><div class='panel-body'><span>"+ref+"</span></div>";
+			tgl="<div class='panel-heading'><span class='panel-title'>Tanggal : </span></div><div class='panel-body'><span>"+tgl+"</span></div>";
+			refs1="<div class='row' style='margin-top:20px;'><div class='col-md-6'><div class='panel panel-success'>"+ref+"</div></div><div class='col-md-6'><div class='panel panel-success'>"+tgl+"</div></div></div>"
+			
+			$("#fbody").html("<div style='min-height:400px;'><ul class='nav nav-tabs' style='background-color:white;font-weight:900;'><li class='active' ><a href='#dp' data-toggle='tab'>Bukti DP</a></li><li><a href='#lunas' data-toggle='tab'>Bukti Lunas</a></li></ul><div class='tab-content' ><div class='tab-pane active' id='dp'>"+refs1+"<div class='panel panel-success'><div class='panel-heading'><span class='panel-title'>Gambar</span></div><div class='panel-body'><center><img src='"+gmb+"' height='450px'></center></div></div></div><div class='tab-pane' id='lunas'>"+refs2+gmb2+"</div></div>");
+			// $("#refs").html(ref);
+			
 			$("#mBantu").modal("show");
 		}
 		
 		function konfirm(id){
-			$("#fbody").html("<form action='<?php echo base_url()?>pemesanan/up_bukti/"+id+"' method='post' enctype='multipart/form-data'>"+
+			$("#fbody").html("<form action='<?php echo base_url()?>pemesanan/up_bukti_dp/"+id+"' method='post' enctype='multipart/form-data'>"+
 			"<input type='file' class='form-control' name='bukti' accept='image/*' required><br>"+
             "<input type='text' name='bank' class='form-control' placeholder='Keterangan' required><br>"+
 			"<button type='submit' class='btn btn-success'>Upload Bukti</button></form>");
