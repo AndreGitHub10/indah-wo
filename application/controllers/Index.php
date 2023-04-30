@@ -12,6 +12,13 @@
 			$data["tothal"]= ceil($this->M_data->data("tbl_wo")->num_rows()/4);
 			$data["cr"]=$cr; $data["kehal"]=$ke;
 			$data["pg"] = "beranda";
+			$data["ulasan"] = $this->db->query("SELECT * FROM tbl_pelanggan,tbl_transaksi,tbl_keranjang
+			WHERE tbl_transaksi.ulasan IS NOT NULL
+			AND tbl_pelanggan.id_pelanggan=tbl_keranjang.id_pelanggan
+			AND tbl_keranjang.id_transaksi=tbl_transaksi.id_transaksi
+			GROUP BY tbl_keranjang.id_transaksi
+			ORDER BY tbl_transaksi.tgl_ulasan DESC
+			LIMIT 4")->result();
 			
 			$this->template->load('template','beranda',$data);
 		}

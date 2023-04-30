@@ -96,5 +96,12 @@
 			
 			$this->load->view('cetak_transaksi',$data);
 		}
+
+		function rate($id){
+			$this->M_proses->ubah("tbl_transaksi",array("ulasan"=>$this->input->post("ulasan"),"tgl_ulasan"=>date("Y-m-d H:i:s"),"rating"=>$this->input->post("rating")),array("id_transaksi"=>$id));
+			$alert_info=array("alert_jns"=>'success',"alert_jdl"=>"<i class='fa fa-check-square-o'></i> Success.!!","alert_pesan"=>"<p>Ulasan anda berhasil di Upload..</p>");
+			$this->session->set_flashdata($alert_info);
+			redirect(base_url("pemesanan"));
+		}
 	}
 ?>

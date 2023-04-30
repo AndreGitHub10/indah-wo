@@ -20,6 +20,8 @@
 <link rel="stylesheet" href="<?php echo base_url()?>assets/front-end/css/style.css"/>
 <link rel="stylesheet" href="<?php echo base_url()?>assets/front-end/css/font-awesome.css" > 
 <link rel='stylesheet' href="<?php echo base_url()?>assets/front-end/css/easy-responsive-tabs.css"  type='text/css'/>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <!-- //for bootstrap working -->
 <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800" rel="stylesheet">
 <link href='http://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,900,900italic,700italic' rel='stylesheet' type='text/css'>
@@ -27,6 +29,32 @@
 <link rel="stylesheet" href="<?php echo base_url()?>assets/front-end/css/summernote.css">
 <link rel="stylesheet" href="<?php echo base_url()?>assets/front-end/css/summernote-bs3.css">
 <?php	}?>
+<style>
+.rating input[type="radio"] {
+  display: none;
+}
+.rating label.checked i,
+i.checked {
+  color: yellow;
+}
+.rating-box {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.comment-box {
+  position: relative;
+  /* other styles */
+}
+
+.comment-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-height: 44px; /* 2 lines * line-height */
+  min-height: 44px;
+}
+</style>
 </head>
 <body> 
 <!-- header-bot -->
@@ -582,11 +610,21 @@ $(document).ready(function(){
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$().UItoTop({ easingType: 'easeOutQuart' });
-								
 			});
+			
 	</script>
 <!-- //here ends scrolling icon -->
-
+<!-- <script type="text/javascript">
+	
+	var ratingInputs = document.getElementsByName('rating');
+	var ratingLabels = document.querySelectorAll('.rating label i');
+	console.log('ratingInputs:', ratingInputs)
+	for (var i = 0; i < ratingInputs.length; i++) {
+	ratingInputs[i].addEventListener('change', function() {
+		console.log('ratingInputs:', ratingInputs)
+	});
+	} -->
+</script>
 
 <!-- for bootstrap working -->
 <script type="text/javascript" src="<?php echo base_url()?>/assets/front-end/js/bootstrap.js"></script>

@@ -86,6 +86,43 @@
 						
 					</div>
 				</div>	
+				<?php if (count($ulasan) > 0){ ?>
+				<div class="row" style="margin-top:20px;">
+				<h3 class="wthree_text_info"><span>Ulasan</span></h3>		
+					<?php foreach ($ulasan as $u){?>
+					<div class="col-md-6">
+						<div class="panel panel-default rating-box comment-box" data-toggle="tooltip" data-placement="bottom" data-original-title="<?php echo $u->ulasan; ?>">
+							<div class="panel-body">
+								<div class="media">
+								<div class="media-left">
+									<a href="#">
+									<img class="media-object img-circle" src="<?php echo base_url("foto/pelanggan/".$u->foto)?>" alt="User Picture" width="50" height="50" onerror="this.onerror=null;this.src='<?php echo base_url("foto/pelanggan/default.png")?>';">
+									</a>
+								</div>
+								<div class="media-body">
+								<p class="date pull-right"><?php echo date('d F, Y', strtotime($u->tgl_ulasan)) ?></p>
+									<h4 class="media-heading" style="font-weight:700;"><?php echo $u->nama_pelanggan ?></h4>
+									<div class="rating">
+									
+									<?php
+										for ($i = 1; $i <= 5; $i++) {
+										if ($i <= $u->rating) {
+											echo '<i class="fa fa-star checked"></i>'; // Color the star yellow
+										} else {
+											echo '<i class="fa fa-star"></i>'; // Default star color
+										}
+										}
+									?>
+									</div>
+									<div class="comment-text">"<?php echo $u->ulasan; ?>"</div>
+								</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<?php }?>
+				</div>
+				<?php } ?>
 			</div>
 		</div>
 	<!-- //new_arrivals --> 
@@ -93,6 +130,9 @@
 
 	<!-- //we-offer -->
 <script>
+	$(document).ready(function() {
+		$('[data-toggle="tooltip"]').tooltip();
+	});
 	function kehal(a){
 	  location.href="<?php echo base_url().'index/index/wo'?>/"+a+"/<?php echo $q?>";
 	}

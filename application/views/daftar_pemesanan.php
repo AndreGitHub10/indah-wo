@@ -42,6 +42,7 @@
 																		$id_prov    = $r->id_prov;
                                     $id_kabkot  = $r->id_kabkot;
                                     $id_kec     = $r->id_kec;
+                                    $nama_pel = $this->M_data->data("tbl_pelanggan",array("id_pelanggan"=>$idpel))->row()->nama_pelanggan;
 
                                     $nama_prov  = $this->M_data->data("tbl_prov",array("id_prov"=>$id_prov))->row()->nama_prov;
 
@@ -86,6 +87,8 @@
                                 <?php } if ($status=='Lunas'){?>
                                 <a href="<?php echo base_url("pemesanan/cetak/".$r->id_transaksi)?>" target="blank">
                                 <button type="button" class="btn btn-info"><i class="fa fa-print"></i> Cetak</button>
+                                </a>
+                                <button type="button" class="btn btn-success" onclick="ulasan('<?php echo $r->id_transaksi?>','<?php echo $nama_pel ?>','<?php echo $r->ulasan ?>','<?php echo $r->rating ?>')"><i class="fa fa-paper-plane"></i> Berikan Ulasan</button>
                                 <?php } if ($status=='Dp'){?>
                                 <button type="button" class="btn btn-default" onclick="pelunasan('<?php echo $r->id_transaksi?>')"><i class="fa fa-clock-o"></i> Konfirmasi &#40;Pelunasan&#41;</button>
                                 <a href="<?php echo base_url("pemesanan/cetak/".$r->id_transaksi)?>" target="blank">
@@ -118,7 +121,65 @@
 				</div>
 			</div>
 		</div>
+        <div class="modal fade" id="rateus" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<center><h4 id="judul"></h4></center>
+						
+					</div>
+					<div class="modal-body modal-body-sub_agile" id="ratebody">
+                        <div class='alert alert-info'><span><i class='fa fa-info-circle'></i> Ulasan kamu dapat dilihat oleh banyak orang.</span></div>
+					<form id='rating-form' method='post' enctype='multipart/form-data' class='form-horizontal'>
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label'>Nama</label>
+                        <div class='col-sm-8'>
+                            <p id='rating-nama-pel' style="font-size:18px;"></p>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label for='rating' class='col-sm-2 control-label'>Rating</label>
+                        <div class="rating col-sm-8" style="font-size:20px;" >
+                            <input type="radio" name="rating" id="rating-1" value="1">
+                            <label for="rating-1"><i class="fa fa-star"></i></label>
+                            <input type="radio" name="rating" id="rating-2" value="2">
+                            <label for="rating-2"><i class="fa fa-star"></i></label>
+                            <input type="radio" name="rating" id="rating-3" value="3">
+                            <label for="rating-3"><i class="fa fa-star"></i></label>
+                            <input type="radio" name="rating" id="rating-4" value="4">
+                            <label for="rating-4"><i class="fa fa-star"></i></label>
+                            <input type="radio" name="rating" id="rating-5" value="5">
+                            <label for="rating-5"><i class="fa fa-star"></i></label>
+                            <span><span id='nilai-rating'>0</span>/5</span>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label for='rating' class='col-sm-2 control-label'>Ulasan</label>
+                        <div class='col-sm-8'>
+                            <textarea type='text' name='ulasan' id='ulasan' class='form-control' placeholder='Masukkan ulasan' required rows="4"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type='submit' class='btn btn-success'><i class="fa fa-paper-plane"></i> Kirim Ulasan</button></form>
+                        </div>
+                    </div>
+					</div>
+					<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button></div>
+				</div>
+			</div>
+		</div>
 	<script>
+        $(document).ready(function() {
+        // Add or remove a class based on user's rating selection
+            $('input[name="rating"]').change(function() {
+                var rating = $(this).val();
+                $('.rating label').removeClass('checked');
+                $('.rating label:lt(' + rating + ')').addClass('checked');
+                $('#nilai-rating').text(rating);
+            });
+        });
 		function GetxhrObject(){
 			var xhr=null;
 			try {xhr=new XMLHttpRequest();}
@@ -188,4 +249,22 @@
 			$("#refbukti").html("Upload Bukti Pembayaran");
 			$("#mBantu").modal("show");
 		}
+
+        function ulasan(id,nama,ulasan,rating){
+            const form = document.getElementById('rating-form');
+            const text = document.getElementById('ulasan');
+            const radio = document.getElementsByName('rating');
+            form.setAttribute('action','<?php echo base_url()?>pemesanan/rate/'+id);
+            if(ulasan!='' && rating!=''){
+                text.value = ulasan;
+                console.log(rating)
+                radio[rating-1].checked = true;
+                $('.rating label').removeClass('checked');
+                $('.rating label:lt(' + rating + ')').addClass('checked');
+                $('#nilai-rating').text(rating);
+            }
+            $("#rating-nama-pel").text(nama);
+			$("#judul").html("Berikan Penilaian");
+			$("#rateus").modal("show");
+        }
 	</script>
